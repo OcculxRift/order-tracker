@@ -53,12 +53,12 @@ export default function AddOrderForm() {
           </div>
           
           <div className="admin-form-group">
-            <label className="admin-label">Имя клиента</label>
+            <label className="admin-label">Название компании</label>
             <input
               type="text"
               value={clientName}
               onChange={(e) => setClientName(e.target.value)}
-              placeholder="Иван Иванов"
+              placeholder="ТОО Абрикос"
               className="admin-input"
               required
             />
@@ -71,9 +71,13 @@ export default function AddOrderForm() {
               onChange={(e) => setStatus(e.target.value)}
               className="admin-select"
             >
-              <option value="В обработке">В обработке</option>
-              <option value="Отправлен">Отправлен</option>
-              <option value="Доставлен">Доставлен</option>
+              <option value="Зарегистрирован">В обработке</option>
+              <option value="Забрали со склада поставщика">Отправлен</option>
+              <option value="Прибыл на склад отправления">Доставлен</option>
+              <option value="Отправлен на границу РК">Доставлен</option>
+              <option value="Прибыл на границу РК">Доставлен</option>
+              <option value="Погрузка, ожидаем в Алматы в течении 2-3 дней">Доставлен</option>
+              <option value="Прибыл в Алматы">Доставлен</option>
             </select>
           </div>
         </div>
