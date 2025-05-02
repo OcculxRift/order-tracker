@@ -10,15 +10,29 @@ export default function AdminPage() {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) navigate('/login');
-      else setLoading(false);
+      const { data: { user }, error } = await supabase.auth.getUser();
+      
+      if (error) {
+        console.error('Ошибка проверки авторизации:', error);
+        navigate('/login');
+        return;
+      }
+      
+      if (!user) {
+        navigate('/login');
+        return;
+      }
+      
+      setLoading(false);
     };
 
     checkAuth();
 
+    // Подписываемся на изменения состояния авторизации
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === 'SIGNED_OUT') navigate('/login');
+      if (event === 'SIGNED_OUT') {
+        navigate('/login');
+      }
     });
 
     return () => subscription?.unsubscribe();
@@ -33,7 +47,7 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="admin-container">
+    <div className="container">
       <div className="card">
         <h1>Панель администратора</h1>
         <AddOrderForm />

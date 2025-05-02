@@ -351,16 +351,7 @@ h4 { font-size: 16px; }
   position: sticky;
   top: 0;
 }
-.actions button {
-  margin-right: 8px;
-  padding: 6px 12px;
-  border-radius: var(--border-radius-sm);
-}
 
-.delete {
-  background-color: var(--danger);
-  color: white;
-}
 
 /* ========== Утилиты ========== */
 .text-success { color: var(--success); }
