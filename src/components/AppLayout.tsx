@@ -1,5 +1,5 @@
 ﻿import { Outlet } from 'react-router-dom';
-import Navigation from './components/Navigation';
+import Navigation from '../components/Navigation'; // Добавлено ../ в начале
 
 export default function AppLayout() {
   return (

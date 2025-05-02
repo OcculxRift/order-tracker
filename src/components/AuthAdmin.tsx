@@ -35,7 +35,8 @@ export default function AuthAdmin() {
       navigate('/admin');
     }, 500);
   } catch (err) {
-    setError(err.message);
+    setError(err instanceof Error ? err.message : 'Неизвестная ошибка');
+  console.error('Ошибка входа:', err);
   } finally {
     setLoading(false);
   }
