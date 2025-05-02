@@ -85,32 +85,32 @@ export default function OrderTable() {
         <tbody>
           {orders.map(order => (
             <tr key={order.id}>
-              <td>
-                {editingId === order.id ? (
-                  <input
-                    value={editData.track_id}
-                    onChange={(e) => setEditData(prev => ({
-                      ...prev,
-                      track_id: e.target.value
-                    }))}
-					className="form-control"
-                    disabled={isMutating}
-                  />
-                ) : (
-                  order.track_id
-                )}
-              </td>
-              <td>
-                {editingId === order.id ? (
-                  <input
-                    value={editData.client_name}
-                    onChange={(e) => setEditData(prev => ({
-                      ...prev,
-                      client_name: e.target.value
-                    }))}
-					className="form-control"
-                    disabled={isMutating}
-                  />
+  <td>
+    {editingId === order.id ? (
+      <input
+        value={editData.track_id}
+        onChange={(e) => setEditData(prev => ({
+          ...prev,
+          track_id: e.target.value
+        }))}
+        className="form-control"
+        disabled={isMutating}
+      />
+    ) : (
+      order.track_id
+    )}
+  </td>
+  <td>
+    {editingId === order.id ? (
+      <input
+        value={editData.client_name}  // Исправлено: client_name вместо company_name
+        onChange={(e) => setEditData(prev => ({
+          ...prev,
+          client_name: e.target.value // Исправлено: client_name
+        }))}
+        className="form-control"
+        disabled={isMutating}
+      />
                 ) : (
                   order.client_name || '-'
                 )}
