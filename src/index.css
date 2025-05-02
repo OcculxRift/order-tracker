@@ -134,10 +134,10 @@ body {
 .card {
   background: var(--card-bg);
   border-radius: var(--border-radius);
-  padding: 24px;
+  padding: 2rem;
   box-shadow: var(--box-shadow);
-  transition: var(--transition);
-  margin-bottom: 24px;
+  margin: 20px auto;
+  max-width: 500px;
 }
 
 .card:hover {
@@ -165,6 +165,7 @@ body {
   border-radius: var(--border-radius-sm);
   font-size: 14px;
   transition: var(--transition);
+  margin-bottom: 12px;
 }
 
 .form-control:focus {
@@ -227,9 +228,11 @@ h4 { font-size: 16px; }
 
 .tracker-input {
   width: 100%;
-  padding: 12px;
+  padding: 12px 16px;
   border: 1px solid #e0e0e0;
   border-radius: var(--border-radius-sm);
+  font-size: 14px;
+  margin: 8px 0;
 }
 
 .tracker-button {

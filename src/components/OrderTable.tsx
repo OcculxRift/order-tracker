@@ -93,6 +93,7 @@ export default function OrderTable() {
                       ...prev,
                       track_id: e.target.value
                     }))}
+					className="form-control"
                     disabled={isMutating}
                   />
                 ) : (
@@ -107,6 +108,7 @@ export default function OrderTable() {
                       ...prev,
                       client_name: e.target.value
                     }))}
+					className="form-control"
                     disabled={isMutating}
                   />
                 ) : (

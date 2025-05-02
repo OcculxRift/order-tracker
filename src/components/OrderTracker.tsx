@@ -31,7 +31,7 @@ export default function OrderTracker() {
             type="text"
             value={trackId}
             onChange={(e) => setTrackId(e.target.value.toUpperCase())}
-            placeholder="Например: ABC123456789"
+            placeholder="Например: TRACK123"
             className="tracker-input"
             disabled={loading}
           />

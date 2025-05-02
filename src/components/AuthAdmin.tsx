@@ -63,7 +63,7 @@ export default function AuthAdmin() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Email"
-            className="form-input"
+            className="form-control"
             required
           />
           <input
@@ -71,7 +71,7 @@ export default function AuthAdmin() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Пароль"
-            className="form-input"
+            className="form-control"
             required
           />
           <button 
