@@ -31,7 +31,7 @@ export default function Navigation() {
     <nav className="nav fade-in">
       <div className="nav-container">
         <div className="nav-links">
-          <Link to="/" className="nav-link">Главная</Link>
+          <Link to="/order-tracker/" className="nav-link">Главная</Link>
           {isAuthenticated && (
             <Link to="/admin" className="nav-link">Админ</Link>
           )}
