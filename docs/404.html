@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Redirecting...</title>
+    <script>
+      const path = window.location.pathname;
+      // Сохраняем путь для React Router
+      sessionStorage.redirect = path.startsWith('/order-tracker') 
+        ? path.replace('/order-tracker', '') 
+        : path;
+      // Перенаправляем на основной index.html
+      window.location.href = '/order-tracker/';
+    </script>
+  </head>
+  <body>
+    <p>Redirecting... Если перенаправление не работает, <a href="/order-tracker/">нажмите сюда</a>.</p>
+  </body>
+</html>
