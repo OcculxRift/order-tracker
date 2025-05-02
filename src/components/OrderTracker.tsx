@@ -68,7 +68,7 @@ export default function OrderTracker() {
             
             {order.client_name && (
               <div className="tracker-result-item">
-                <p className="tracker-result-label">КЛИЕНТ</p>
+                <p className="tracker-result-label">Название компании</p>
                 <p className="tracker-result-value">{order.client_name}</p>
               </div>
             )}
