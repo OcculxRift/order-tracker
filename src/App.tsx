@@ -11,7 +11,7 @@ const queryClient = new QueryClient();
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
+      <BrowserRouter basename="/order-tracker">
         <Navigation />
         <Routes>
           <Route path="/" element={<HomePage />} />
