@@ -362,4 +362,74 @@ h2 { font-size: 24px; }
   .tracker-input-group { flex-direction: column; }
   .tracker-button { width: 100%; padding: 14px; }
   .tracker-result-grid { grid-template-columns: 1fr; gap: 15px; }
+}/* Общие стили таблицы */
+.table-container {
+  overflow-x: auto;
+  margin: 20px 0;
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.orders-table th, 
+.orders-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.orders-table th {
+  background-color: #f5f5f5;
+  font-weight: 500;
+}
+
+/* Стили для инпутов и селектов */
+.orders-table input,
+.orders-table select {
+  width: 100%;
+  padding: 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+/* Стили для кнопок */
+.actions button {
+  padding: 4px 8px;
+  margin-right: 8px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+button.delete {
+  background-color: #f44336;
+  color: white;
+}
+
+/* Состояния загрузки */
+.loading {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+}
+
+.error {
+  padding: 20px;
+  text-align: center;
+  color: #f44336;
+}
+
+.empty {
+  padding: 20px;
+  text-align: center;
+  color: #666;
 }
