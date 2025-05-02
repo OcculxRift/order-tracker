@@ -8,7 +8,7 @@ export default function OrderTable() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editData, setEditData] = useState({
     track_id: '',
-    company_name: '',
+    client_name: '',
     status: STATUS_OPTIONS[0]
   });
 
@@ -55,7 +55,7 @@ export default function OrderTable() {
     setEditingId(order.id);
     setEditData({
       track_id: order.track_id,
-      company_name: order.company_name || '',
+      client_name: order.client_name || '',
       status: order.status
     });
   };
@@ -102,15 +102,15 @@ export default function OrderTable() {
               <td>
                 {editingId === order.id ? (
                   <input
-                    value={editData.company_name}
+                    value={editData.client_name}
                     onChange={(e) => setEditData(prev => ({
                       ...prev,
-                      company_name: e.target.value
+                      client_name: e.target.value
                     }))}
                     disabled={isMutating}
                   />
                 ) : (
-                  order.company_name || '-'
+                  order.client_name || '-'
                 )}
               </td>
               <td style={{ color: STATUS_COLORS[order.status] }}>
