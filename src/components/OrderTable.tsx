@@ -1,32 +1,10 @@
-﻿import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+﻿// OrderTable.tsx
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { supabase } from '../lib/supabaseClient';
 import { useState } from 'react';
-
-// Константы для статусов
-const STATUS_OPTIONS = [
-  'Зарегистрирован',
-  'Забрали со склада поставщика',
-  'Прибыл на склад отправления',
-  'Отправлен на границу РК',
-  'Прибыл на границу РК',
-  'Погрузка, ожидаем в Алматы в течении 2-3 дней', 
-  'Прибыл в Алматы',
-  'Доставлен'
-];
-
-const STATUS_COLORS: Record<string, string> = {
-  'Зарегистрирован': '#6c757d',
-  'Забрали со склада поставщика': '#6f42c1',
-  'Прибыл на склад отправления': '#007bff',
-  'Отправлен на границу РК': '#17a2b8',
-  'Прибыл на границу РК': '#fd7e14',
-  'Погрузка, ожидаем в Алматы в течении 2-3 дней': '#ffc107',
-  'Прибыл в Алматы': '#28a745',
-  'Доставлен': '#34c759'
-};
+import { STATUS_OPTIONS, STATUS_COLORS } from '../constants/statuses';
 
 export default function OrderTable() {
-  const queryClient = useQueryClient();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editData, setEditData] = useState({
     track_id: '',
@@ -34,7 +12,7 @@ export default function OrderTable() {
     status: STATUS_OPTIONS[0]
   });
 
-  // Оптимизированный запрос с пагинацией
+  // Запрос данных
   const { data: orders, isLoading, error } = useQuery(
     ['orders'],
     async () => {
@@ -45,22 +23,32 @@ export default function OrderTable() {
       if (error) throw error;
       return data;
     },
-    {
-      keepPreviousData: true,
-      staleTime: 30000 // 30 секунд
-    }
+    { staleTime: 30000 }
   );
 
-  // Общая функция для мутаций
-  const handleMutation = async (mutationFn: Promise<any>, action: string) => {
-    try {
-      await mutationFn;
-      queryClient.invalidateQueries(['orders']);
-      if (action === 'update') setEditingId(null);
-    } catch (err) {
-      console.error(`Ошибка при ${action} заказа:`, err);
+  // Мутация для обновления
+  const updateMutation = useMutation({
+    mutationFn: async () => {
+      if (!editingId) return;
+      const { error } = await supabase
+        .from('orders')
+        .update(editData)
+        .eq('id', editingId);
+      if (error) throw error;
+    },
+    onSuccess: () => setEditingId(null)
+  });
+
+  // Мутация для удаления
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from('orders')
+        .delete()
+        .eq('id', id);
+      if (error) throw error;
     }
-  };
+  });
 
   // Обработчики действий
   const handleEdit = (order: any) => {
@@ -72,29 +60,11 @@ export default function OrderTable() {
     });
   };
 
-  const handleSave = () => {
-    if (!editingId) return;
-    handleMutation(
-      supabase
-        .from('orders')
-        .update(editData)
-        .eq('id', editingId),
-      'update'
-    );
-  };
+  const handleSave = () => updateMutation.mutate();
+  const handleDelete = (id: string) => deleteMutation.mutate(id);
 
-  const handleDelete = (id: string) => {
-    handleMutation(
-      supabase
-        .from('orders')
-        .delete()
-        .eq('id', id),
-      'delete'
-    );
-  };
-
-  // Состояние загрузки
-  const isMutating = useMutation().isLoading;
+  // Состояния загрузки
+  const isMutating = updateMutation.isLoading || deleteMutation.isLoading;
 
   if (isLoading) return <div className="loading">Загрузка заказов...</div>;
   if (error) return <div className="error">Ошибка: {(error as Error).message}</div>;
@@ -119,7 +89,10 @@ export default function OrderTable() {
                 {editingId === order.id ? (
                   <input
                     value={editData.track_id}
-                    onChange={(e) => setEditData({...editData, track_id: e.target.value})}
+                    onChange={(e) => setEditData(prev => ({
+                      ...prev,
+                      track_id: e.target.value
+                    }))}
                     disabled={isMutating}
                   />
                 ) : (
@@ -130,7 +103,10 @@ export default function OrderTable() {
                 {editingId === order.id ? (
                   <input
                     value={editData.company_name}
-                    onChange={(e) => setEditData({...editData, company_name: e.target.value})}
+                    onChange={(e) => setEditData(prev => ({
+                      ...prev,
+                      company_name: e.target.value
+                    }))}
                     disabled={isMutating}
                   />
                 ) : (
@@ -141,7 +117,10 @@ export default function OrderTable() {
                 {editingId === order.id ? (
                   <select
                     value={editData.status}
-                    onChange={(e) => setEditData({...editData, status: e.target.value})}
+                    onChange={(e) => setEditData(prev => ({
+                      ...prev,
+                      status: e.target.value
+                    }))}
                     disabled={isMutating}
                   >
                     {STATUS_OPTIONS.map(option => (
@@ -158,16 +137,25 @@ export default function OrderTable() {
               <td className="actions">
                 {editingId === order.id ? (
                   <>
-                    <button onClick={handleSave} disabled={isMutating}>
-                      {isMutating ? 'Сохранение...' : 'Сохранить'}
+                    <button 
+                      onClick={handleSave} 
+                      disabled={isMutating}
+                    >
+                      {updateMutation.isLoading ? 'Сохранение...' : 'Сохранить'}
                     </button>
-                    <button onClick={() => setEditingId(null)} disabled={isMutating}>
+                    <button 
+                      onClick={() => setEditingId(null)} 
+                      disabled={isMutating}
+                    >
                       Отмена
                     </button>
                   </>
                 ) : (
                   <>
-                    <button onClick={() => handleEdit(order)} disabled={isMutating}>
+                    <button 
+                      onClick={() => handleEdit(order)} 
+                      disabled={isMutating}
+                    >
                       Редактировать
                     </button>
                     <button 
@@ -175,7 +163,7 @@ export default function OrderTable() {
                       disabled={isMutating}
                       className="delete"
                     >
-                      Удалить
+                      {deleteMutation.isLoading ? 'Удаление...' : 'Удалить'}
                     </button>
                   </>
                 )}
