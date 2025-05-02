@@ -17,7 +17,7 @@ export default function AddOrderForm() {
   const queryClient = useQueryClient();
   const [formData, setFormData] = useState({
     track_id: '',
-    company_name: '',
+    client_name: '',
     status: STATUS_OPTIONS[0]
   });
   const [loading, setLoading] = useState(false);
@@ -48,7 +48,7 @@ export default function AddOrderForm() {
         .from('orders')
         .insert([{ 
           track_id: formData.track_id.trim().toUpperCase(),
-          company_name: formData.company_name.trim(),
+          client_name: formData.client_name.trim(),
           status: formData.status
         }])
         .select();
@@ -59,7 +59,7 @@ export default function AddOrderForm() {
       await queryClient.invalidateQueries(['orders']);
       setFormData({
         track_id: '',
-        company_name: '',
+        client_name: '',
         status: STATUS_OPTIONS[0]
       });
 
@@ -91,12 +91,12 @@ export default function AddOrderForm() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="company_name">Наименование фирмы</label>
+          <label htmlFor="client_name">Наименование фирмы</label>
           <input
-            id="company_name"
-            name="company_name"
+            id="client_name"
+            name="client_name"
             type="text"
-            value={formData.company_name}
+            value={formData.client_name}
             onChange={handleInputChange}
             placeholder="ООО 'Ромашка'"
             disabled={loading}
