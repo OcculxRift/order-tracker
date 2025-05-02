@@ -1,5 +1,4 @@
-﻿// OrderTable.tsx
-import { useQuery, useMutation } from '@tanstack/react-query';
+﻿import { useQuery, useMutation } from '@tanstack/react-query';
 import { supabase } from '../lib/supabaseClient';
 import { useState } from 'react';
 import { STATUS_OPTIONS, STATUS_COLORS } from '../constants/statuses';
@@ -12,7 +11,6 @@ export default function OrderTable() {
     status: STATUS_OPTIONS[0]
   });
 
-  // Запрос данных
   const { data: orders, isLoading, error } = useQuery(
     ['orders'],
     async () => {
@@ -26,7 +24,6 @@ export default function OrderTable() {
     { staleTime: 30000 }
   );
 
-  // Мутация для обновления
   const updateMutation = useMutation({
     mutationFn: async () => {
       if (!editingId) return;
@@ -39,7 +36,6 @@ export default function OrderTable() {
     onSuccess: () => setEditingId(null)
   });
 
-  // Мутация для удаления
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase
@@ -50,7 +46,6 @@ export default function OrderTable() {
     }
   });
 
-  // Обработчики действий
   const handleEdit = (order: any) => {
     setEditingId(order.id);
     setEditData({
@@ -63,7 +58,6 @@ export default function OrderTable() {
   const handleSave = () => updateMutation.mutate();
   const handleDelete = (id: string) => deleteMutation.mutate(id);
 
-  // Состояния загрузки
   const isMutating = updateMutation.isLoading || deleteMutation.isLoading;
 
   if (isLoading) return <div className="loading">Загрузка заказов...</div>;
@@ -89,11 +83,8 @@ export default function OrderTable() {
                 {editingId === order.id ? (
                   <input
                     value={editData.track_id}
-                    onChange={(e) => setEditData(prev => ({
-                      ...prev,
-                      track_id: e.target.value
-                    }))}
-					className="form-control"
+                    onChange={(e) => setEditData(prev => ({ ...prev, track_id: e.target.value }))}
+                    className="form-control"
                     disabled={isMutating}
                   />
                 ) : (
@@ -104,11 +95,8 @@ export default function OrderTable() {
                 {editingId === order.id ? (
                   <input
                     value={editData.client_name}
-                    onChange={(e) => setEditData(prev => ({
-                      ...prev,
-                      client_name: e.target.value
-                    }))}
-					className="form-control"
+                    onChange={(e) => setEditData(prev => ({ ...prev, client_name: e.target.value }))}
+                    className="form-control"
                     disabled={isMutating}
                   />
                 ) : (
@@ -119,10 +107,8 @@ export default function OrderTable() {
                 {editingId === order.id ? (
                   <select
                     value={editData.status}
-                    onChange={(e) => setEditData(prev => ({
-                      ...prev,
-                      status: e.target.value
-                    }))}
+                    onChange={(e) => setEditData(prev => ({ ...prev, status: e.target.value }))}
+                    className="form-control"
                     disabled={isMutating}
                   >
                     {STATUS_OPTIONS.map(option => (
@@ -142,12 +128,14 @@ export default function OrderTable() {
                     <button 
                       onClick={handleSave} 
                       disabled={isMutating}
+                      className="btn-primary"
                     >
                       {updateMutation.isLoading ? 'Сохранение...' : 'Сохранить'}
                     </button>
                     <button 
                       onClick={() => setEditingId(null)} 
                       disabled={isMutating}
+                      className="btn-outline"
                     >
                       Отмена
                     </button>
@@ -157,6 +145,7 @@ export default function OrderTable() {
                     <button 
                       onClick={() => handleEdit(order)} 
                       disabled={isMutating}
+                      className="btn-primary"
                     >
                       Редактировать
                     </button>
