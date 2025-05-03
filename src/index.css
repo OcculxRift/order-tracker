@@ -144,3 +144,23 @@ body {
     }
   }
 }
+.form-control {
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  width: 100%;
+}
+
+.btn-edit, .btn-save, .btn-cancel, .btn-delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  margin: 0 2px;
+  font-size: 16px;
+}
+
+.btn-save { color: #28a745; }
+.btn-cancel { color: #dc3545; }
+.btn-edit { color: #007bff; }
+.btn-delete { color: #dc3545; }
