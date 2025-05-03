@@ -22,7 +22,7 @@ export default function OrderTracker() {
 
   return (
     <div className="tracker">
-      <h2>Отследить заказ</h2>
+      <h2 style={{ textAlign: 'center', marginBottom: '1rem' }}>Отслеживание заказа</h2>
       <div className="search-box">
         <input
           value={trackId}
@@ -30,16 +30,26 @@ export default function OrderTracker() {
           placeholder="Введите трек-номер"
           disabled={loading}
         />
-        <button onClick={handleSearch} disabled={loading}>
-          {loading ? '...' : 'Найти'}
+        <button 
+          onClick={handleSearch} 
+          disabled={loading || !trackId.trim()}
+        >
+          {loading ? 'Поиск...' : 'Найти'}
         </button>
       </div>
 
       {order && (
-        <div className="order-info">
-          <p>Трек: {order.track_id}</p>
-          <p>Статус: {order.status}</p>
-          {order.client_name && <p>Фирма: {order.client_name}</p>}
+        <div style={{ 
+          background: 'white',
+          padding: '1.5rem',
+          borderRadius: 'var(--radius)',
+          boxShadow: 'var(--shadow)'
+        }}>
+          <div style={{ display: 'grid', gap: '12px' }}>
+            <p><strong>Трек-номер:</strong> {order.track_id}</p>
+            <p><strong>Статус:</strong> {order.status}</p>
+            {order.client_name && <p><strong>Фирма:</strong> {order.client_name}</p>}
+          </div>
         </div>
       )}
     </div>
