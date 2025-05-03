@@ -3,53 +3,32 @@ import { supabase } from '../lib/supabaseClient';
 import { useEffect, useState } from 'react';
 
 export default function Navigation() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuth, setIsAuth] = useState(false);
   const navigate = useNavigate();
 
-  const checkAuth = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    setIsAuthenticated(!!user);
-  };
-
   useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setIsAuth(!!user);
+    };
+    
     checkAuth();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      checkAuth();
-      if (event === 'SIGNED_OUT') {
-        navigate('/');
-      }
-    });
-
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => checkAuth());
     return () => subscription?.unsubscribe();
-  }, [navigate]);
+  }, []);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
+    navigate('/');
   };
 
   return (
-    <nav className="nav fade-in">
-      <div className="nav-container">
-        <div className="nav-links">
-          <Link to="/" className="nav-link">Главная</Link>
-          {isAuthenticated && (
-            <Link to="/admin" className="nav-link">Админ</Link>
-          )}
-        </div>
-        {isAuthenticated ? (
-          <button 
-            onClick={handleLogout}
-            className="btn btn-outline"
-          >
-            Выйти
-          </button>
-        ) : (
-          <Link to="/login" className="btn btn-primary">
-            Войти
-          </Link>
-        )}
-      </div>
+    <nav className="nav">
+      <Link to="/" className="nav-link">Главная</Link>
+      {isAuth && <Link to="/admin" className="nav-link">Админ</Link>}
+      {isAuth 
+        ? <button onClick={handleLogout} className="nav-btn">Выйти</button>
+        : <Link to="/login" className="nav-btn">Войти</Link>}
     </nav>
   );
 }
