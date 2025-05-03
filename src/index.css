@@ -164,3 +164,37 @@ body {
 .btn-cancel { color: #dc3545; }
 .btn-edit { color: #007bff; }
 .btn-delete { color: #dc3545; }
+
+/* Для контейнера таблицы */
+@media (max-width: 480px) {
+  .table-container {
+    width: 100%;
+    overflow-x: auto;
+    display: flex;
+    justify-content: center;
+    padding: 0 10px;
+  }
+
+  /* Стили самой таблицы */
+  table {
+    width: auto;
+    margin: 0 auto;
+    font-size: 14px; /* Уменьшаем размер текста */
+  }
+
+  /* Стили ячеек */
+  td, th {
+    padding: 8px 12px;
+    white-space: nowrap; /* Запрещаем перенос текста */
+  }
+}
+tr:not(:last-child) {
+  border-bottom: 1px solid #eee;
+}
+
+/* Стили для заголовков */
+th {
+  background: #f8f9fa;
+  position: sticky;
+  left: 0;
+}
