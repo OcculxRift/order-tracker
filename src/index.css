@@ -139,6 +139,7 @@ body {
     }
   }
 
+@media (max-width: 480px) {
   .table-container {
     width: 100%;
     overflow-x: auto;
@@ -148,14 +149,16 @@ body {
 
   .simple-table {
     font-size: 14px;
-    min-width: 320px;
-    
-    th, td {
-      padding: 8px 10px;
-      white-space: normal;
-      max-width: 120px;
-    }
+    min-width: 600px; /* чтобы таблица не схлопывалась */
   }
+
+  .simple-table th,
+  .simple-table td {
+    padding: 8px 10px;
+    white-space: nowrap;
+  }
+}
+
 }
 
 /* Вспомогательные стили */
@@ -182,4 +185,27 @@ body {
 
 tr:not(:last-child) {
   border-bottom: 1px solid #eee;
+}
+.order-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.order-card {
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1rem;
+  font-size: 14px;
+}
+
+.order-card p {
+  margin: 4px 0;
+}
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
 }
