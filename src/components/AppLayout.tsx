@@ -1,13 +1,15 @@
-﻿import { Outlet } from 'react-router-dom';
-import Navigation from '../components/Navigation'; // Добавлено ../ в начале
+﻿import { ReactNode } from 'react';
+import Navigation from './Navigation';
 
-export default function AppLayout() {
+type Props = {
+  children: ReactNode;
+};
+
+export default function AppLayout({ children }: Props) {
   return (
     <div className="app-container">
       <Navigation />
-      <main className="main-content">
-        <Outlet />
-      </main>
+      <main className="main-content">{children}</main>
     </div>
   );
 }

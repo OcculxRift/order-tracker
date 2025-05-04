@@ -1,37 +1,43 @@
-﻿import { useState } from 'react';
+﻿import { useState, useCallback } from 'react';
 import { supabase } from '../lib/supabaseClient';
+import { STATUS_COLORS } from '../constants/statuses';
 
 export default function OrderTracker() {
   const [trackId, setTrackId] = useState('');
-  const [order, setOrder] = useState<any>(null);
+  const [orderResult, setOrderResult] = useState<{
+    order: null | { track_id: string; client_name: string; status: string };
+    error: string | null;
+  }>({ order: null, error: null });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
-  const handleSearch = async () => {
-    if (!trackId.trim()) return;
+  const handleSearch = useCallback(async () => {
+    const query = trackId.trim().toUpperCase();
+    if (!query) return;
+
     setLoading(true);
-    setError('');
-    
-    try {
-      const { data, error: queryError } = await supabase
-        .from('orders')
-        .select('track_id, status, client_name')
-        .ilike('track_id', trackId.trim())
-        .single();
+    setOrderResult({ order: null, error: null });
 
-      if (queryError) throw queryError;
-      setOrder(data);
-    } catch (err) {
-      setError('Заказ не найден');
-      setOrder(null);
-    } finally {
-      setLoading(false);
+    const { data, error } = await supabase
+      .from('orders')
+      .select('track_id, status, client_name')
+      .eq('track_id', query)
+      .single();
+
+    if (error || !data) {
+      setOrderResult({ order: null, error: 'Заказ не найден' });
+    } else {
+      setOrderResult({ order: data, error: null });
     }
-  };
+
+    setLoading(false);
+  }, [trackId]);
 
   return (
     <div className="tracker">
-      <h2 style={{ textAlign: 'center', marginBottom: '1rem' }}>Отслеживание заказа</h2>
+      <h2 style={{ textAlign: 'center', marginBottom: '1rem' }}>
+        Отслеживание заказа
+      </h2>
+
       <div className="search-box">
         <input
           value={trackId}
@@ -39,28 +45,45 @@ export default function OrderTracker() {
           placeholder="Введите трек-номер"
           disabled={loading}
         />
-        <button 
-          onClick={handleSearch} 
+        <button
+          onClick={handleSearch}
           disabled={loading || !trackId.trim()}
         >
           {loading ? 'Поиск...' : 'Найти'}
         </button>
       </div>
 
-      {error && <div style={{ color: 'red', margin: '1rem 0' }}>{error}</div>}
+      {orderResult.error && (
+        <div style={{ color: 'red', margin: '1rem 0' }}>
+          {orderResult.error}
+        </div>
+      )}
 
-      {order && (
-        <div style={{ 
-          background: 'white',
-          padding: '1.5rem',
-          borderRadius: 'var(--radius)',
-          boxShadow: 'var(--shadow)',
-          marginTop: '1rem'
-        }}>
+      {orderResult.order && (
+        <div
+          style={{
+            background: 'white',
+            padding: '1.5rem',
+            borderRadius: 'var(--radius)',
+            boxShadow: 'var(--shadow)',
+            marginTop: '1rem',
+          }}
+        >
           <div style={{ display: 'grid', gap: '12px' }}>
-            <p><strong>Трек-номер:</strong> {order.track_id}</p>
-            <p><strong>Статус:</strong> {order.status}</p>
-            {order.client_name && <p><strong>Фирма:</strong> {order.client_name}</p>}
+            <p>
+              <strong>Трек-номер:</strong> {orderResult.order.track_id}
+            </p>
+            <p>
+              <strong>Статус:</strong>{' '}
+              <span style={{ color: STATUS_COLORS[orderResult.order.status] }}>
+                {orderResult.order.status}
+              </span>
+            </p>
+            {orderResult.order.client_name && (
+              <p>
+                <strong>Фирма:</strong> {orderResult.order.client_name}
+              </p>
+            )}
           </div>
         </div>
       )}

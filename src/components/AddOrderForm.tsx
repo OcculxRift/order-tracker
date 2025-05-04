@@ -1,75 +1,14 @@
-﻿import { useState } from 'react';
-import { supabase } from '../lib/supabaseClient';
-import { useQueryClient } from '@tanstack/react-query';
-
-const STATUS_OPTIONS = [
-  'Зарегистрирован',
-  'Забрали со склада поставщика',
-  'Прибыл на склад отправления',
-  'Отправлен на границу РК',
-  'Прибыл на границу РК',
-  'Погрузка, ожидаем в Алматы в течении 2-3 дней',
-  'Прибыл в Алматы',
-  'Доставлен'
-];
+﻿import { useAddOrderForm } from '../hooks/useAddOrderForm';
+import { STATUS_OPTIONS } from '../constants/statuses';
 
 export default function AddOrderForm() {
-  const queryClient = useQueryClient();
-  const [formData, setFormData] = useState({
-    track_id: '',
-    client_name: '',
-    status: STATUS_OPTIONS[0]
-  });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    // Валидация трек-номера
-    if (!formData.track_id.trim()) {
-      setError('Пожалуйста, введите трек-номер');
-      setLoading(false);
-      return;
-    }
-
-    try {
-      const { error: insertError } = await supabase
-        .from('orders')
-        .insert([{ 
-          track_id: formData.track_id.trim().toUpperCase(),
-          client_name: formData.client_name.trim(),
-          status: formData.status
-        }])
-        .select();
-
-      if (insertError) throw insertError;
-
-      // Инвалидация кэша и сброс формы
-      await queryClient.invalidateQueries(['orders']);
-      setFormData({
-        track_id: '',
-        client_name: '',
-        status: STATUS_OPTIONS[0]
-      });
-
-    } catch (err) {
-      console.error('Ошибка при добавлении заказа:', err);
-      setError(err instanceof Error ? err.message : 'Неизвестная ошибка');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    formData,
+    loading,
+    error,
+    handleInputChange,
+    handleSubmit,
+  } = useAddOrderForm();
 
   return (
     <form onSubmit={handleSubmit} className="add-order-form">
@@ -87,6 +26,7 @@ export default function AddOrderForm() {
             placeholder="ABC123456789"
             disabled={loading}
             required
+            autoFocus
           />
         </div>
 
@@ -112,7 +52,7 @@ export default function AddOrderForm() {
             onChange={handleInputChange}
             disabled={loading}
           >
-            {STATUS_OPTIONS.map(option => (
+            {STATUS_OPTIONS.map((option) => (
               <option key={option} value={option}>
                 {option}
               </option>
@@ -121,15 +61,10 @@ export default function AddOrderForm() {
         </div>
       </div>
 
-      <button 
-        type="submit" 
-        disabled={loading}
-        className="submit-btn"
-      >
+      <button type="submit" disabled={loading} className="submit-btn">
         {loading ? (
           <>
-            <span className="spinner"></span>
-            Добавление...
+            <span className="spinner" /> Добавление...
           </>
         ) : (
           'Добавить заказ'
