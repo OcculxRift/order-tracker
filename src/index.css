@@ -424,3 +424,9 @@ tr:not(:last-child) {
     padding: 14px;
   }
 }
+.admin-wrapper {
+  width: 100%;
+  max-width: none;
+  padding: 16px;
+  box-sizing: border-box;
+}

@@ -12,8 +12,9 @@ export default function AdminPage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) navigate('/login');
     };
-    
+
     checkAuth();
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === 'SIGNED_OUT') navigate('/login');
     });
@@ -22,12 +23,10 @@ export default function AdminPage() {
   }, [navigate]);
 
   return (
-    <div className="container">
-      <div className="card">
-        <h1>Панель администратора</h1>
-        <AddOrderForm />
-        <OrderTable />
-      </div>
+    <div className="admin-wrapper">
+      <h1 style={{ marginBottom: '1.5rem' }}>Панель администратора</h1>
+      <AddOrderForm />
+      <OrderTable />
     </div>
   );
 }
