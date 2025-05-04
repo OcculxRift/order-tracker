@@ -193,11 +193,13 @@ tr:not(:last-child) {
 }
 
 .order-card {
+  width: 100%;
   background: white;
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   padding: 1rem;
   font-size: 14px;
+  box-sizing: border-box;
 }
 
 .order-card p {
@@ -209,6 +211,7 @@ tr:not(:last-child) {
   gap: 8px;
   margin-top: 8px;
 }
+
 .add-order-form {
   background: white;
   padding: 1rem;
