@@ -430,3 +430,24 @@ tr:not(:last-child) {
   padding: 16px;
   box-sizing: border-box;
 }
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+  background-color: #f9f9f9; /* можно изменить */
+}
+
+#root {
+  width: 100% !important;
+  max-width: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+main, .main-content, .app-container {
+  width: 100% !important;
+  max-width: none !important;
+  padding: 0 !important;
+}
